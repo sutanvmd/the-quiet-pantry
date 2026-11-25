@@ -17,6 +17,7 @@ export function createWorld(seed = 1) {
     served: 0, dayServed: 0, missed: 0, dayMissed: 0,
     combo: 0, bestCombo: 0,
     calm: false,             // Calm Mode: patience drains slowly, nobody storms off
+    paused: false,           // keyboard pause (P / Esc) during a day
     orders: [],              // {id, person, recipe, patience, patienceMax}
     selectedId: null,        // order the plate belongs to
     plate: [],               // completed steps for the selected order (ingredient ids / 'cook')
@@ -115,8 +116,14 @@ export function serve(w, at = { x: 640, y: 300 }) {
   w.spawnT = Math.min(w.spawnT, 0.8);
 }
 
+export function togglePause(w) {
+  if (w.mode !== 'play') return;
+  w.paused = !w.paused;
+}
+
 export function startDay(w) {
   w.mode = 'play';
+  w.paused = false;
   w.timeLeft = DAY_SECONDS;
   w.dayCoins = 0; w.dayServed = 0; w.dayMissed = 0;
   w.orders = []; w.plate = []; w.selectedId = null; w.cooking = 0; w.combo = 0;
@@ -134,6 +141,7 @@ export function summaryStars(w) {
 }
 
 export function update(w, dt) {
+  if (w.paused) return; // frozen: day timer, patience and the pan all wait
   for (const p of w.popups) { p.t += dt; p.y -= 26 * dt; }
   w.popups = w.popups.filter((p) => p.t < 1.6);
   if (w.shake > 0) w.shake = Math.max(0, w.shake - dt);

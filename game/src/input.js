@@ -2,7 +2,7 @@
 // see is exactly what you can click.
 import { L } from './render.js';
 import { INGREDIENTS } from './config.js';
-import { selectOrder, addIngredient, startCook, trashLast, serve, startDay, nextDay } from './world.js';
+import { selectOrder, addIngredient, startCook, trashLast, serve, startDay, nextDay, togglePause } from './world.js';
 import { setMuted } from './audio.js';
 
 const inRect = (x, y, r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
@@ -13,6 +13,7 @@ export function bindInput(canvas, w) {
     return { x: (ev.clientX - rect.left) * (1280 / rect.width), y: (ev.clientY - rect.top) * (720 / rect.height) };
   }
   canvas.addEventListener('pointerdown', (ev) => {
+    if (w.paused) return; // clicks wait until the day resumes
     const { x, y } = pos(ev);
     if (inRect(x, y, L.muteBtn)) { w.muted = !w.muted; setMuted(w.muted); return; }
     if (w.mode === 'title') { if (inRect(x, y, L.playBtn)) startDay(w); return; }
@@ -28,6 +29,8 @@ export function bindInput(canvas, w) {
     if (inRect(x, y, L.trashBtn)) { trashLast(w); return; }
   });
   window.addEventListener('keydown', (ev) => {
+    if ((ev.key === 'p' || ev.key === 'P' || ev.key === 'Escape') && w.mode === 'play') { togglePause(w); return; }
+    if (w.paused) return; // only P / Esc get through while paused
     if (w.mode === 'title') { if (ev.key === 'Enter' || ev.key === ' ') startDay(w); return; }
     if (w.mode === 'summary') { if (ev.key === 'Enter') nextDay(w); return; }
     const ing = INGREDIENTS.find((i) => i.key === ev.key);

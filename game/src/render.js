@@ -324,6 +324,13 @@ function drawSummary(ctx, w) {
   text(ctx, `START DAY ${w.day + 1}`, 640, L.nextBtn.y + 34, 22, '#fff', 'center', true, 'Verdana, sans-serif');
 }
 
+function drawPause(ctx) {
+  ctx.fillStyle = 'rgba(43,29,22,.45)'; ctx.fillRect(0, 0, 1280, 720);
+  ctx.fillStyle = P.paper; rr(ctx, 340, 300, 600, 120, 22); ctx.fill();
+  ctx.strokeStyle = P.terra; ctx.lineWidth = 4; rr(ctx, 340, 300, 600, 120, 22); ctx.stroke();
+  text(ctx, 'Paused — press P to resume', 640, 360, 30, P.ink, 'center', true);
+}
+
 export function render(ctx, w) {
   ctx.save();
   if (w.shake > 0) ctx.translate((Math.sin(w.shake * 60) * 4), 0);
@@ -345,5 +352,6 @@ export function render(ctx, w) {
     text(ctx, p.text, p.x, p.y, 19, p.color, 'center', true, 'Verdana, sans-serif');
     ctx.globalAlpha = 1;
   }
+  if (w.paused) drawPause(ctx);
   ctx.restore();
 }
