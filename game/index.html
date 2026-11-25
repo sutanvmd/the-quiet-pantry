@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quiet Pantry — a cozy office cooking game</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #2b1d16; height: 100%; }
+  body { display: flex; align-items: center; justify-content: center; font-family: Georgia, 'Times New Roman', serif; }
+  #wrap { width: min(100vw, 1280px); }
+  canvas { display: block; width: 100%; height: auto; background: #fff6e9; border-radius: 6px; box-shadow: 0 18px 60px rgba(0,0,0,.5); cursor: pointer; }
+  #hint { color: #d9c6ae; text-align: center; font-size: 13px; padding: 8px 4px 0; letter-spacing: .02em; }
+  html.shot body { display: block; }
+  html.shot #hint { display: none; }
+  html.shot #wrap { width: 1280px; }
+</style>
+<script>if (new URLSearchParams(location.search).has('shot')) document.documentElement.classList.add('shot');</script>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game" width="1280" height="720"></canvas>
+  <div id="hint">Click ingredients to build the dish on the order card. Keys 1–0 add ingredients, C cooks, Enter serves, Backspace removes the last item.</div>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
